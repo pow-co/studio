@@ -33,11 +33,15 @@ jobs:
       # Replace this with steps to deploy to users
       - run:
           name: deploy
-          command: '#e.g. ./deploy.sh'
+          command: ssh -o StrictHostKeyChecking=no root@studio.pow.co '/opt/deploy_powco_studio.sh'
 workflows:
   build:
     jobs:
       - build-node
-    # - deploy:
-    #     requires:
-    #       - build-node
+      - deploy:
+          requires:
+            - build-node
+          filters:
+            branches:
+              only: 
+                - main
