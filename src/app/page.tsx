@@ -72,7 +72,7 @@ export default function Home() {
             </div>
           </div>
           <div className='flex flex-col text-center mt-5 p-20 border border-gray-100/20 rounded-lg'>
-            <h2 className='text-2xl font-bold py-2'>You don't have any NFT of this type</h2>
+            <h2 className='text-2xl font-bold py-2'>You do not have any NFT of this type</h2>
             <p className='text-white/80 mb-5'>To get started you’ll need your prepared assets, we’ll help guide you along your way.</p>
             <div className='rounded-lg mx-auto py-2 px-4 bg-white text-black cursor-pointer hover:opacity-80'>
               Create
