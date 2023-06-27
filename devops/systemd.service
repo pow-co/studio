@@ -1,0 +1,16 @@
+[Unit]
+Description=studio.pow.co nextjs app
+Documentation=https://studio.pow.co
+After=network.target
+
+[Service]
+Environment=PORT=4476
+Type=simple
+User=root
+WorkingDirectory=/opt/studio.pow.co
+ExecStart=/usr/bin/npm start 
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target
+
