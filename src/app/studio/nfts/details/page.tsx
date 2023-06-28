@@ -76,11 +76,11 @@ const NFTMintPage = () => {
       ));
 
   return (
-    <div className='h-screen flex flex-col bg-black text-white'>
-        <header className='h-24 flex justify-between items-center px-5 bg-stone-900 border-b border-stone-100/20'>
+    <div className='h-screen flex flex-col justify-between bg-black text-white'>
+        <header className='sticky z-50 w-full top-0 left-0 h-24 flex justify-between items-center px-5 bg-stone-900 border-b border-stone-100/20'>
             <div className='py-5 flex items-baseline cursor-pointer select-none'>
-            <h1 className='text-3xl font-bold'>PowCo</h1>
-            <p className='ml-1 text-2xl font-semibold bg-gradient-to-r from-green-500 via-violet-500 to-blue-500 text-transparent bg-clip-text'>Studio</p>
+                <h1 className='text-3xl font-bold'>PowCo</h1>
+                <p className='ml-1 text-2xl font-semibold bg-gradient-to-r from-green-500 via-violet-500 to-blue-500 text-transparent bg-clip-text'>Studio</p>
             </div>
             <ol className='flex space-x-6'>
                 <li className={`flex items-center px-4 py-2 rounded-lg ${step === 1 ? "bg-stone-800" : "opacity-20"}`}>
@@ -102,22 +102,23 @@ const NFTMintPage = () => {
             </ol>
             <div className='py-2 px-4 border border-white rounded-lg cursor-pointer hover:opacity-80'>Connect Wallet</div>
         </header>
-        <main className='grow grid grid-cols-12 gap-16 p-16'>
-            <div className='col-span-6'>
+        <main className='grow overflow-auto shrink grid grid-cols-12 gap-16 p-16 bg-black'>
+            <div className='col-span-1'/>
+            <div className='col-span-4'>
                 <section>
                     {files.length === 0 ? (
-                    <div className="flex w-full flex-col items-center justify-center bg-transparent p-4" {...getRootProps({})}>
-                        <label htmlFor="dropzone" className="flex h-64 w-full cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-dashed border-gray-300 bg-primary-100 hover:bg-primary-200 dark:border-gray-600 dark:bg-primary-700/20 dark:hover:border-gray-500 dark:hover:bg-primary-800/20">
-                        <div className="flex flex-col items-center justify-center pb-6 pt-5">
-                            <svg aria-hidden="true" className="mb-3 h-10 w-10 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" /></svg>
-                            <p className="mb-2 text-sm text-gray-500 dark:text-gray-400">
-                            <span className="font-semibold">Click to upload</span>
-                            {' '}
-                            or drag and drop
-                            </p>
-                            <p className="text-xs text-gray-500 dark:text-gray-400">SVG, PNG, JPG or GIF (MAX. 800x400px)</p>
-                        </div>
-                        <input id="dropzone" {...getInputProps()} />
+                    <div className="flex w-full relative flex-col items-center justify-center bg-stone-900 rounded-lg p-2" {...getRootProps({})}>
+                        <label htmlFor="dropzone" className="flex min-h-[27.5rem] w-full cursor-pointer flex-col items-center justify-center rounded-lg hover:bg-stone-800 ">
+                            <div className="flex flex-col items-center justify-center pb-6 pt-5">
+                                <svg aria-hidden="true" className="mb-3 h-10 w-10 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" /></svg>
+                                <p className="mb-2 text-sm text-gray-500 dark:text-gray-400">
+                                <span className="font-semibold">Click to upload</span>
+                                {' '}
+                                or drag and drop
+                                </p>
+                                <p className="text-xs text-gray-500 dark:text-gray-400">SVG, PNG, JPG or GIF (MAX. 800x400px)</p>
+                            </div>
+                            <input id="dropzone" {...getInputProps()} />
                         </label>
                     </div>
                     )
@@ -128,53 +129,55 @@ const NFTMintPage = () => {
                     )}
                 </section>
             </div>
-            <div className='col-span-6 px-10'>
-                <h1 className='text-3xl font-bold'>Create NFT</h1>
-                <p className='opacity-80'>You can create a single NFT or editions. Open Editions allow you to create an unlimited number of prints. Limited Editions allow you to set a limit to how many prints can be created from the original.</p>
+            <div className='col-span-1'/>
+            <div className='col-span-5 '>
+                <h1 className='text-3xl font-bold mb-4'>Create NFT</h1>
+                <p className='text-sm opacity-80'>You can create a single NFT or editions. Open Editions allow you to create an unlimited number of prints. Limited Editions allow you to set a limit to how many prints can be created from the original.</p>
                 <div className='mt-10'>
-                    <div className='flex justify-between'>
-                        <label htmlFor='nft-name' className=''>Name<span>(required)</span></label>
+                    <div className='flex justify-between mb-2'>
+                        <label htmlFor='nft-name' className='font-semibold'>Name<span className='ml-1 font-normal opacity-80'>(required)</span></label>
                         <div>0/32</div>
                     </div>
-                    <input required type='text' id="nft-name" placeholder='Name' className='w-full' />
+                    <input required type='text' id="nft-name" placeholder='Name' className='w-full p-4 rounded-lg appearance-none bg-stone-900 placeholder:hover:text-white/80 focus:border-2 focus:outline-none focus:border-green-500' />
                 </div>
                 <div className='mt-10'>
-                    <div className='flex justify-between'>
-                        <label htmlFor='nft-description' className=''>Description</label>
+                    <div className='flex justify-between mb-2'>
+                        <label htmlFor='nft-description' className='font-semibold'>Description</label>
                         <div>0/500</div>
                     </div>
-                    <textarea id="nft-description" placeholder='Name' className='w-full' />
+                    <textarea id="nft-description" placeholder='Name' rows={4} className='w-full p-4 rounded-lg appearance-none bg-stone-900 placeholder:hover:text-white/80 focus:border-2 focus:outline-none focus:border-green-500' />
                 </div>
                 <div className='mt-10'>
-                    <div className='flex justify-between'>
-                        <label htmlFor='nft-link' className=''>Link</label>
+                    <div className='flex justify-between mb-2'>
+                        <label htmlFor='nft-link' className='font-semibold'>Link</label>
                         <div>0/100</div>
                     </div>
-                    <input type='text' id="nft-link" placeholder='Link' className='w-full' />
+                    <input type='text' id="nft-link" placeholder='Enter the website or link to your project' className='w-full p-4 rounded-lg appearance-none bg-stone-900 placeholder:hover:text-white/80 focus:border-2 focus:outline-none focus:border-green-500' />
                 </div>
-                <div className='mt-10'>
-                    <label htmlFor='nft-type' className=''>NFT type<span>(required)</span></label>
-                    <select id="nft-type">
+                <div className='mt-10 flex flex-col'>
+                    <label htmlFor='nft-type' className='mb-2 font-semibold'>NFT type<span className='ml-1 font-normal opacity-80'>(required)</span></label>
+                    <select id="nft-type" className=' w-full p-4 rounded-lg appearance-none bg-stone-900 focus:border-2 focus:outline-none focus:border-green-500'>
                         <option>One of One</option>
                         <option>Limited Edition</option>
                         <option>Open Edition</option>
                     </select>
                 </div>
                 <div className='mt-10'>
-                    <div className='flex justify-between'>
-                    <div>
-                        <label htmlFor='nft-royalty' className=''>Name<span>(required)</span></label>
-                        <p className='opacity-80'>The percentage of future sales that will be sent to the creators of this NFT.</p>
+                    <div className='flex justify-between mb-2'>
+                        <div>
+                            <label htmlFor='nft-royalty' className='font-semibold'>Secondary Sales Royalties<span className='ml-1 font-normal opacity-80'>(required)</span></label>
+                            <p className='text-sm opacity-80'>The percentage of future sales that will be sent to the creators of this NFT.</p>
+                        </div>
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
+                            <path strokeLinecap="round" strokeLinejoin="round" d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75h.008v.008H12V8.25z" />
+                        </svg>
                     </div>
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
-                        <path strokeLinecap="round" strokeLinejoin="round" d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75h.008v.008H12V8.25z" />
-                    </svg>
-                    </div>
-                    <input required type='number' id="nft-royalty" />
+                    <input required type='number' id="nft-royalty" className='p-4 rounded-lg appearance-none bg-stone-900 focus:border-2 focus:outline-none focus:border-green-500' />
                 </div>
             </div>
+            <div className='col-span-1'/>
         </main>
-        <footer className='px-5 h-24 flex items-center justify-between bg-stone-900 border-t border-stone-100/20'>
+        <footer className='sticky z-50 bottom-0 left-0 w-full px-5 h-24 flex items-center justify-between bg-stone-900 border-t border-stone-100/20'>
             <Link href="/studio/nfts">
                 <div className='px-6 py-3 bg-stone-800 rounded-lg cursor-pointer hover:bg-stone-700'>Exit</div>
             </Link>
