@@ -5,6 +5,8 @@ import Link from 'next/link';
 import React, { useCallback,useMemo,useState } from 'react'
 import { useDropzone } from 'react-dropzone';
 import Step1 from './Step1';
+import Step2 from './Step2';
+import Step3 from './Step3';
 
 const NFTMintPage = () => {
     const [step, setStep] = useState(1)
@@ -105,7 +107,24 @@ const NFTMintPage = () => {
                     setNftRoyalty={setNftRoyalty} 
                     nftRoyaltyInvalid={nftRoyaltyInvalid} 
                     setNftRoyaltyInvalid={setNftRoyaltyInvalid} 
-                />)}
+                />)
+            }
+            {step === 2 && (
+                <Step2 
+                    base64File={base64File}
+                    nftName={nftName}
+                    nftDescription={nftDescription}
+                    nftLink={nftLink} 
+                />
+            )}
+            {step === 3 && (
+                <Step3 
+                    base64File={base64File}
+                    nftName={nftName}
+                    nftDescription={nftDescription}
+                    nftLink={nftLink} 
+                />
+            )}
         </main>
         <footer className='sticky z-50 bottom-0 left-0 w-full px-5 h-24 flex items-center justify-between bg-stone-900 border-t border-stone-100/20'>
             <Link href="/studio/nfts">
