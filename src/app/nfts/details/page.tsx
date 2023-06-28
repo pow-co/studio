@@ -127,7 +127,7 @@ const NFTMintPage = () => {
             )}
         </main>
         <footer className='sticky z-50 bottom-0 left-0 w-full px-5 h-24 flex items-center justify-between bg-stone-900 border-t border-stone-100/20'>
-            <Link href="/studio/nfts">
+            <Link href="/nfts">
                 <div className='px-6 py-3 bg-stone-800 rounded-lg cursor-pointer hover:bg-stone-700'>Exit</div>
             </Link>
             <button onClick={handleNextStep} disabled={!unlockStep23} className='flex px-6 py-3 bg-green-500 disabled:bg-stone-800 rounded-lg cursor-pointer disabled:cursor-default hover:bg-stone-700 hover:disabled:bg-stone-800 disabled:opacity-30'>

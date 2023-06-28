@@ -65,7 +65,7 @@ export default function Home() {
               <div onClick={() => setTabSelected(2)} className={`py-2 mr-0.5 px-4 cursor-pointer hover:bg-stone-900 ${tabSelected === 2 && "bg-stone-800"}`}>Open Editions</div>
               <div onClick={() => setTabSelected(3)} className={`py-2 px-4 rounded-r-lg cursor-pointer hover:bg-stone-900 ${tabSelected === 3 && "bg-stone-800"}`}>Collection NFTs</div>
             </div>
-            <Link href="/studio/nfts/details">
+            <Link href="/nfts/details">
               <div className='flex rounded-lg py-2 px-4 bg-white text-black cursor-pointer hover:opacity-80'>
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
                   <path strokeLinecap="round" strokeLinejoin="round" d="M12 6v12m6-6H6" />
@@ -77,7 +77,7 @@ export default function Home() {
           <div className='flex flex-col text-center mt-5 p-20 border border-stone-100/20 rounded-lg'>
             <h2 className='text-2xl font-bold py-2'>You don't have any NFT of this type</h2>
             <p className='text-white/80 mb-5'>To get started you'll need your prepared assets, we'll help guide you along your way.</p>
-            <Link href="/studio/nfts/details" className='mx-auto'>
+            <Link href="/nfts/details" className='mx-auto'>
               <div className='rounded-lg mx-auto py-2 px-4 bg-white text-black cursor-pointer hover:opacity-80'>
                 Create
               </div>
