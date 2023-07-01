@@ -7,6 +7,7 @@ import { useDropzone } from 'react-dropzone';
 import Step1 from './Step1';
 import Step2 from './Step2';
 import Step3 from './Step3';
+import Step4 from './Step4';
 
 const NFTMintPage = () => {
     const [step, setStep] = useState(1)
@@ -20,9 +21,12 @@ const NFTMintPage = () => {
     const [nftQuantityInvalid, setNftQuantityInvalid] = useState(false)
     const [nftRoyalty, setNftRoyalty] = useState(0)
     const [nftRoyaltyInvalid, setNftRoyaltyInvalid] = useState(false)
-    const hasMetaData = useMemo(() =>  nftName.length > 0 || nftDescription.length > 0 || nftLink.length > 0, [nftName, nftDescription, nftLink])
     const hasInvalidInput = useMemo(() => nftLinkInvalid || nftQuantityInvalid || nftRoyaltyInvalid, [nftLinkInvalid, nftQuantityInvalid, nftRoyaltyInvalid])
     const unlockStep23 = useMemo(() => !hasInvalidInput && nftName.length > 0 && base64File.length > 0, [hasInvalidInput, base64File, nftName])
+    const [collectionBase64File, setCollectionBase64File] = useState("")
+    const [collectionName, setCollectionName] = useState("")
+    const [collectionDescription, setCollectionDescription] = useState("")
+    const unlockStep4 = useMemo(() => unlockStep23 && collectionBase64File.length > 0 && collectionName.length > 0,[unlockStep23, collectionBase64File, collectionName])
 
     const handleStep1 = (e:any) => {
         e.preventDefault()
@@ -45,6 +49,9 @@ const NFTMintPage = () => {
 
     const handleStep4 = (e:any) => {
         e.preventDefault()
+        if (unlockStep4){
+            setStep(4)
+        }
     }
 
     const handleNextStep = (e:any) => {
@@ -54,6 +61,10 @@ const NFTMintPage = () => {
         }
         if (step === 2 && unlockStep23) {
             setStep(3)
+        }
+        if (step === 3 && unlockStep4) {
+            console.log("here")
+            setStep(4)
         }
     }
 
@@ -65,7 +76,7 @@ const NFTMintPage = () => {
                 <p className='ml-1 text-2xl font-semibold bg-gradient-to-r from-green-500 via-violet-500 to-blue-500 text-transparent bg-clip-text'>Studio</p>
             </div>
             <ol className='flex space-x-6'>
-                <li onClick={handleStep1} className={`flex items-center px-4 py-2 rounded-lg ${step === 1 ? "bg-stone-800" : "cursor-pointer  opacity-20"}`}>
+                <li onClick={handleStep1} className={`flex items-center px-4 py-2 rounded-lg ${step === 1 ? "bg-stone-800" : "cursor-pointer"}`}>
                     <span className='flex items-center justify-center w-6 h-6 rounded-full border border-white'>1</span>
                     <span className='ml-2 text-sm font-semibold'>Details</span>
                 </li>
@@ -123,6 +134,23 @@ const NFTMintPage = () => {
                     nftName={nftName}
                     nftDescription={nftDescription}
                     nftLink={nftLink} 
+                    collectionBase64File={collectionBase64File}
+                    setCollectionBase64File={setCollectionBase64File}
+                    collectionName={collectionName}
+                    setCollectionName={setCollectionName}
+                    collectionDescription={collectionDescription}
+                    setCollectionDescription={setCollectionDescription}
+                />
+            )}
+            {step === 4 && (
+                <Step4 
+                    base64File={base64File}
+                    nftName={nftName}
+                    nftDescription={nftDescription}
+                    nftLink={nftLink} 
+                    collectionBase64File={collectionBase64File}
+                    collectionName={collectionName}
+                    collectionDescription={collectionDescription}
                 />
             )}
         </main>
@@ -130,7 +158,7 @@ const NFTMintPage = () => {
             <Link href="/nfts">
                 <div className='px-6 py-3 bg-stone-800 rounded-lg cursor-pointer hover:bg-stone-700'>Exit</div>
             </Link>
-            <button onClick={handleNextStep} disabled={!unlockStep23} className='flex px-6 py-3 bg-green-500 disabled:bg-stone-800 rounded-lg cursor-pointer disabled:cursor-default hover:bg-stone-700 hover:disabled:bg-stone-800 disabled:opacity-30'>
+            <button onClick={handleNextStep} disabled={(step < 3 && !unlockStep23) || (step === 3 && !unlockStep4)} className='flex px-6 py-3 bg-green-500 disabled:bg-stone-800 rounded-lg cursor-pointer disabled:cursor-default hover:bg-green-400 hover:disabled:bg-stone-800 disabled:opacity-30'>
                 <p className='mr-2'>Continue</p>
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
                     <path strokeLinecap="round" strokeLinejoin="round" d="M17.25 8.25L21 12m0 0l-3.75 3.75M21 12H3" />

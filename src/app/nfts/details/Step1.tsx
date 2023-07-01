@@ -50,6 +50,7 @@ const Step1 = ({
     setNftRoyaltyInvalid
 }: Step1Props) => {
     const hasMetaData = useMemo(() =>  nftName.length > 0 || nftDescription.length > 0 || nftLink.length > 0, [nftName, nftDescription, nftLink])
+    
     const onDrop = useCallback((acceptedFiles: any) => {
         acceptedFiles.forEach((file: any) => {
             const reader = new FileReader();
