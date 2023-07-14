@@ -68,6 +68,11 @@ const NFTMintPage = () => {
         }
     }
 
+    const handleCreate = (e:any) => {
+        e.preventDefault()
+
+    }
+
   return (
     <div className='h-screen flex flex-col justify-between bg-black text-white'>
         <header className='sticky z-50 w-full top-0 left-0 h-24 flex justify-between items-center px-5 bg-stone-900 border-b border-stone-100/20'>
@@ -88,7 +93,7 @@ const NFTMintPage = () => {
                     <span className='flex items-center justify-center w-6 h-6 rounded-full border border-white'>3</span>
                     <span className='ml-2 text-sm font-semibold'>Collection</span>
                 </li>
-                <li onClick={handleStep4} className={`flex items-center px-4 py-2 rounded-lg ${step === 4 ? "bg-stone-800" : "cursor-pointer opacity-20"}`}>
+                <li onClick={handleStep4} className={`flex items-center px-4 py-2 rounded-lg ${step === 4 ? "bg-stone-800" : `${unlockStep4 ? "cursor-pointer" : "opacity-20"}`}`}>
                     <span className='flex items-center justify-center w-6 h-6 rounded-full border border-white'>4</span>
                     <span className='ml-2 text-sm font-semibold'>Create</span>
                 </li>
@@ -158,12 +163,21 @@ const NFTMintPage = () => {
             <Link href="/nfts">
                 <div className='px-6 py-3 bg-stone-800 rounded-lg cursor-pointer hover:bg-stone-700'>Exit</div>
             </Link>
-            <button onClick={handleNextStep} disabled={(step < 3 && !unlockStep23) || (step === 3 && !unlockStep4)} className='flex px-6 py-3 bg-green-500 disabled:bg-stone-800 rounded-lg cursor-pointer disabled:cursor-default hover:bg-green-400 hover:disabled:bg-stone-800 disabled:opacity-30'>
-                <p className='mr-2'>Continue</p>
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M17.25 8.25L21 12m0 0l-3.75 3.75M21 12H3" />
-                </svg>
-            </button>
+            {step < 4 ? (
+                <button onClick={handleNextStep} disabled={(step < 3 && !unlockStep23) || (step === 3 && !unlockStep4)} className='flex px-6 py-3 bg-green-500 disabled:bg-stone-800 rounded-lg cursor-pointer disabled:cursor-default hover:bg-green-400 hover:disabled:bg-stone-800 disabled:opacity-30'>
+                    <p className='mr-2'>Continue</p>
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M17.25 8.25L21 12m0 0l-3.75 3.75M21 12H3" />
+                    </svg>
+                </button> 
+                ): (
+                <button onClick={handleCreate} disabled={!unlockStep4} className='flex px-6 py-3 bg-green-500 disabled:bg-stone-800 rounded-lg cursor-pointer disabled:cursor-default hover:bg-green-400 hover:disabled:bg-stone-800 disabled:opacity-30'>
+                    <p className='mr-2'>Create</p>
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M17.25 8.25L21 12m0 0l-3.75 3.75M21 12H3" />
+                    </svg>
+                </button>
+            )}
         </footer>
     </div>
   )

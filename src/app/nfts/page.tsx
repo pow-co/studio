@@ -1,5 +1,6 @@
 'use client'
 
+import Stag from '@/components/Stag'
 import Link from 'next/link'
 import { useState } from 'react'
 
@@ -10,10 +11,15 @@ export default function Home() {
   return (
     <div className='grid grid-cols-12 h-screen bg-black text-white'>
       <div className='flex flex-col px-5 justify-center col-span-3 bg-stone-950'>
-        <div className='py-5 flex items-baseline cursor-pointer select-none'>
-          <h1 className='text-3xl font-bold'>PowCo</h1>
-          <p className='ml-1 text-2xl font-semibold bg-gradient-to-r from-green-500 via-violet-500 to-blue-500 text-transparent bg-clip-text'>Studio</p>
+        <Link href="/">
+        <div className='py-5 flex items-center cursor-pointer select-none'>
+          <Stag size={46}/>
+          <div className='flex items-baseline'>
+            <h1 className='ml-3 text-3xl font-bold'>PowCo</h1>
+            <p className='ml-1 text-2xl font-semibold bg-gradient-to-r from-green-500 via-violet-500 to-blue-500 text-transparent bg-clip-text'>Studio</p>
+          </div>
         </div>
+        </Link>
         <div className='py-5'>
           <div className={`cursor-pointer flex items-center bg-stone-700 rounded-lg px-3 py-1 mb-2 hover:bg-stone-800`}>
             <div>
@@ -50,7 +56,15 @@ export default function Home() {
           </div>
         </div>
         <div className='grow'/>
-        <div></div>
+        <div className='flex'>
+          <a className= "group cursor-pointer flex p-3 hover:opacity-80" href="https://pow.co">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="hidden group-hover:block w-6 h-6">
+              <path strokeLinecap="round" strokeLinejoin="round" d="M6.75 15.75L3 12m0 0l3.75-3.75M3 12h18" />
+            </svg>
+            <p className='mx-1'>Back to PowCo</p>
+            <Stag size={21}/>
+          </a>
+        </div>
       </div>
       <div className='col-span-9'>
         <div className='bg-stone-900 flex justify-end h-16 items-center px-5'>

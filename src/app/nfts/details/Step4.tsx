@@ -11,8 +11,28 @@ interface Step4Props {
     collectionDescription: string;
 }
 
+const bitcoinAddressRegex = /^(1|3)[A-HJ-NP-Za-km-z1-9]{25,34}$/;
+
 const Step4 = ({ base64File, nftName, nftDescription, nftLink, collectionBase64File, collectionName, collectionDescription }: Step4Props) => {
     const [tabIndex, setTabIndex] = useState(0)
+    const [ordinalsAddress, setOrdinalsAddress] = useState("")
+    const [isAddressInvalid, setIsAddressInvalid] = useState(false)
+
+    const handleChangeOrdinalsAddress = (e:any) => {
+        e.preventDefault()
+        setIsAddressInvalid(false)
+        setOrdinalsAddress(e.target.value)
+    }
+
+    const handleBlurOrdinalsAddress = (e:any) => {
+        e.preventDefault()
+        if(ordinalsAddress.length === 0){
+            setIsAddressInvalid(false)
+        } else {
+            setIsAddressInvalid(!bitcoinAddressRegex.test(ordinalsAddress))
+        }
+    }
+
   return (
     <>
         <div className='col-span-1'/>
@@ -50,6 +70,19 @@ const Step4 = ({ base64File, nftName, nftDescription, nftLink, collectionBase64F
                     <span>{nftLink}</span>
                 </a>}
                 {nftDescription.length > 0 && <div className='opacity-80 text-sm'>{nftDescription}</div>}
+            </div>
+            <div className='mt-10'>
+                <h1 className='text-2xl font-bold mb-4'>Minting Address<span className='ml-2 opacity-50 font-normal'>(optional)</span></h1>
+                <p className='text-sm opacity-80'>Choose to which <span className='font-bold'>1SatOrdinals address</span> your item(s) will be sent. If you leave this blank, we will mint to you RelayX Run account. You'll have to wait untill we build support to be able to see your items in your wallet, transfer and sell them.</p>
+                <input 
+                    type="text"
+                    placeholder='1Sat Ordinals Minting Address'
+                    className={`mt-4 w-full p-4 rounded-lg appearance-none bg-stone-900 placeholder:hover:text-white/80 ${isAddressInvalid && "border-2 border-red-500"} focus:border-2 focus:outline-none focus:border-green-500`}
+                    value={ordinalsAddress}
+                    onChange={handleChangeOrdinalsAddress}
+                    onBlur={handleBlurOrdinalsAddress}
+                />
+                {isAddressInvalid && <p className='text-xs text-red-500'>Invalid Address</p>}
             </div>
         </div>
         <div className='col-span-1'/>
