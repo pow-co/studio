@@ -1,13 +1,15 @@
 'use client'
 
-import { buf2hex } from '@/utils';
+import dynamic from 'next/dynamic';
 import Link from 'next/link';
 import React, { useCallback,useMemo,useState } from 'react'
 import { useDropzone } from 'react-dropzone';
+import Stag from '@/components/Stag';
 import Step1 from './Step1';
 import Step2 from './Step2';
 import Step3 from './Step3';
 import Step4 from './Step4';
+const AuthButton = dynamic(() => import("@/components/AuthButton"), { ssr: false })
 
 const NFTMintPage = () => {
     const [step, setStep] = useState(1)
@@ -76,10 +78,15 @@ const NFTMintPage = () => {
   return (
     <div className='h-screen flex flex-col justify-between bg-black text-white'>
         <header className='sticky z-50 w-full top-0 left-0 h-24 flex justify-between items-center px-5 bg-stone-900 border-b border-stone-100/20'>
-            <div className='py-5 flex items-baseline cursor-pointer select-none'>
-                <h1 className='text-3xl font-bold'>PowCo</h1>
-                <p className='ml-1 text-2xl font-semibold bg-gradient-to-r from-green-500 via-violet-500 to-blue-500 text-transparent bg-clip-text'>Studio</p>
-            </div>
+            <Link href="/">
+                <div className='py-5 flex items-center cursor-pointer select-none'>
+                    <Stag size={46}/>
+                    <div className='flex items-baseline'>
+                        <h1 className='ml-3 text-3xl font-bold'>PowCo</h1>
+                        <p className='ml-1 text-2xl font-semibold bg-gradient-to-r from-green-500 via-violet-500 to-blue-500 text-transparent bg-clip-text'>Studio</p>
+                    </div>
+                </div>
+            </Link>
             <ol className='flex space-x-6'>
                 <li onClick={handleStep1} className={`flex items-center px-4 py-2 rounded-lg ${step === 1 ? "bg-stone-800" : "cursor-pointer"}`}>
                     <span className='flex items-center justify-center w-6 h-6 rounded-full border border-white'>1</span>
@@ -98,7 +105,7 @@ const NFTMintPage = () => {
                     <span className='ml-2 text-sm font-semibold'>Create</span>
                 </li>
             </ol>
-            <div className='py-2 px-4 border border-white rounded-lg cursor-pointer hover:opacity-80'>Connect Wallet</div>
+            <AuthButton/>
         </header>
         <main className='grow overflow-auto shrink grid grid-cols-12 gap-16 p-16 bg-black'>
             {step === 1 && (

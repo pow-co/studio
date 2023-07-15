@@ -1,8 +1,11 @@
 'use client'
+import dynamic from 'next/dynamic'
 
 import Stag from '@/components/Stag'
 import Link from 'next/link'
 import { useState } from 'react'
+
+const AuthButton = dynamic(() => import("../../components/AuthButton"),{ssr: false})
 
 
 
@@ -68,7 +71,7 @@ export default function Home() {
       </div>
       <div className='col-span-9'>
         <div className='bg-stone-900 flex justify-end h-16 items-center px-5'>
-          <div className='py-2 px-4 border border-white rounded-lg cursor-pointer hover:opacity-80'>Connect Wallet</div>
+          <AuthButton />
         </div>
         <div className='my-10 px-5'>
           <h1 className='text-3xl font-bold'>NFTs</h1>
