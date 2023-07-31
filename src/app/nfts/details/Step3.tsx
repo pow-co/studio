@@ -142,7 +142,7 @@ const Step3 = ({ base64File, nftName, nftDescription, nftLink, collectionBase64F
                 <label htmlFor='collection-name' className='font-semibold'>Name<span className='ml-1 font-normal opacity-80'>(required)</span></label>
                 <div className='text-sm opacity-80'>{collectionName.length}/32</div>
             </div>
-            <input maxLength={32} required type='text' id="collection-name" placeholder='Name' value={collectionName} onChange={handleChangeCollectionName} className='w-full p-4 rounded-lg appearance-none bg-stone-900 placeholder:hover:text-white/80 focus:border-2 focus:outline-none focus:border-green-500' />
+            <input autoComplete='off' maxLength={32} required type='text' id="collection-name" placeholder='Name' value={collectionName} onChange={handleChangeCollectionName} className='w-full p-4 rounded-lg appearance-none bg-stone-900 placeholder:hover:text-white/80 focus:border-2 focus:outline-none focus:border-green-500' />
         </div>
         <div className='mt-10'>
             <div className='flex justify-between mb-2'>

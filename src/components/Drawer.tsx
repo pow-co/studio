@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react"
 import { createPortal } from "react-dom"
-import { useRouter } from "next/router"
+import { usePathname } from "next/navigation"
 
 interface DrawerProps {
    children: React.ReactNode;
@@ -11,11 +11,11 @@ interface DrawerProps {
 
 const Drawer= ({ children, selector, isOpen, onClose }: DrawerProps) => {
    const [mounted, setMounted] = useState(false)
-   const router = useRouter()
+   const pathname = usePathname()
 
    useEffect(() => {
     onClose();
-  }, [router.pathname]);
+  }, [pathname]);
 
 
    useEffect(() => {
@@ -27,7 +27,7 @@ const Drawer= ({ children, selector, isOpen, onClose }: DrawerProps) => {
    const DrawerLayout = (props:{children: React.ReactNode}) => {
        return (
         <div className="fixed inset-0 w-screen h-screen" style={{zIndex:"1010"}}>
-            <div className="fixed inset-0 w-screen h-screen bg-black opacity-50" onClick={onClose}></div>
+            <div className="fixed inset-0 w-screen h-screen bg-black  opacity-50" onClick={onClose}></div>
                <div>{props.children}</div>
         </div>)
    }

@@ -3,6 +3,7 @@ import './globals.css'
 import { Inter } from 'next/font/google'
 import Script from 'next/script'
 import Head from 'next/head'
+import { Toaster } from 'react-hot-toast';
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -24,6 +25,7 @@ export default function RootLayout({
       <body className={inter.className}>
         <RelayProvider>
           {children}
+          <Toaster/>
         </RelayProvider>
       </body>
     </html>

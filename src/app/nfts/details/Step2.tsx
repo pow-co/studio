@@ -1,5 +1,7 @@
 'use client'
-import React from 'react'
+import { useRelay } from '@/context/RelayContext';
+import React, { useState } from 'react'
+import toast from "react-hot-toast"
 
 interface Step2Props {
     base64File: string;
@@ -9,7 +11,23 @@ interface Step2Props {
 }
 
 const Step2 = ({ base64File, nftName, nftDescription, nftLink }: Step2Props) => {
-    const creatorAddress = "1myAddress1234567898765432345678765" // TODO how to get the relayAddress from relay Provider
+    const { runOwner } = useRelay()
+
+    const handleCopy = (e:any) => {
+        console.log("here")
+        e.preventDefault()
+        navigator.clipboard.writeText(runOwner).then(() => {
+            toast('Copied to clipboard', {
+                icon: '✅',
+                style: {
+                  borderRadius: '10px',
+                  background: '#333',
+                  color: '#fff',
+                },
+              });
+        })
+    }
+
   return (
     <>
     <div className='col-span-1'/>
@@ -42,7 +60,7 @@ const Step2 = ({ base64File, nftName, nftDescription, nftLink }: Step2Props) => 
                 Your Wallet<span className='ml-1 font-normal opacity-80'>(Default)</span>
             </div>
             <div className='col-span-6 font-semibold'>Royalty Percentage</div>
-            <input disabled defaultValue={creatorAddress} type="text" className='col-span-6 p-4 text-ellipsis bg-stone-900 rounded-lg'/>
+            <div onClick={handleCopy} className='max-w-full whitespace-nowrap overflow-hidden cursor-pointer col-span-6 p-4 text-ellipsis bg-stone-900 rounded-lg'>{runOwner}</div>
             <input type="number" min={0} max={100} value={100} step={1} className='col-span-6 p-4 bg-stone-900 rounded-lg'/>
         </div>
         <button type="button" className='bg-stone-900 p-4 rounded-lg flex mt-4 cursor-pointer hover:bg-stone-800'>

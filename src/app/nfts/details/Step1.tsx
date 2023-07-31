@@ -202,7 +202,7 @@ const Step1 = ({
                     <label htmlFor='nft-name' className='font-semibold'>Name<span className='ml-1 font-normal opacity-80'>(required)</span></label>
                     <div className='text-sm opacity-80'>{nftName.length}/32</div>
                 </div>
-                <input maxLength={32} required type='text' id="nft-name" placeholder='Name' value={nftName} onChange={handleChangeNftName} className='w-full p-4 rounded-lg appearance-none bg-stone-900 placeholder:hover:text-white/80 focus:border-2 focus:outline-none focus:border-green-500' />
+                <input autoComplete='off' maxLength={32} required type='text' id="nft-name" placeholder='Name' value={nftName} onChange={handleChangeNftName} className='w-full p-4 rounded-lg appearance-none bg-stone-900 placeholder:hover:text-white/80 focus:border-2 focus:outline-none focus:border-green-500' />
             </div>
             <div className='mt-10'>
                 <div className='flex justify-between mb-2'>
@@ -216,7 +216,7 @@ const Step1 = ({
                     <label htmlFor='nft-link' className='font-semibold'>Link</label>
                     <div className='text-sm opacity-80'>{nftLink.length}/100</div>
                 </div>
-                <input type='text' id="nft-link" maxLength={100} value={nftLink} onChange={handleChangeNftLink} onBlur={handleBlurNftLink} placeholder='Enter the website or link to your project' className='w-full p-4 rounded-lg appearance-none bg-stone-900 placeholder:hover:text-white/80 focus:border-2 focus:outline-none focus:border-green-500' />
+                <input autoComplete='off' type='text' id="nft-link" maxLength={100} value={nftLink} onChange={handleChangeNftLink} onBlur={handleBlurNftLink} placeholder='Enter the website or link to your project' className='w-full p-4 rounded-lg appearance-none bg-stone-900 placeholder:hover:text-white/80 focus:border-2 focus:outline-none focus:border-green-500' />
                 {nftLinkInvalid && <p className='mt-2 text-sm text-red-500'>Must be a valid URL</p>}
             </div>
             <div className='mt-10 flex flex-col'>

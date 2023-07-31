@@ -9,6 +9,8 @@ import Step1 from './Step1';
 import Step2 from './Step2';
 import Step3 from './Step3';
 import Step4 from './Step4';
+import Drawer from '@/components/Drawer';
+import CreatePopup from '@/components/CreatePopup';
 const AuthButton = dynamic(() => import("@/components/AuthButton"), { ssr: false })
 
 const NFTMintPage = () => {
@@ -29,6 +31,7 @@ const NFTMintPage = () => {
     const [collectionName, setCollectionName] = useState("")
     const [collectionDescription, setCollectionDescription] = useState("")
     const unlockStep4 = useMemo(() => unlockStep23 && collectionBase64File.length > 0 && collectionName.length > 0,[unlockStep23, collectionBase64File, collectionName])
+    const [createPopupOpen, setCreatePopupOpen] = useState(false)
 
     const handleStep1 = (e:any) => {
         e.preventDefault()
@@ -72,7 +75,7 @@ const NFTMintPage = () => {
 
     const handleCreate = (e:any) => {
         e.preventDefault()
-
+        setCreatePopupOpen(true)
     }
 
   return (
@@ -186,6 +189,13 @@ const NFTMintPage = () => {
                 </button>
             )}
         </footer>
+        <Drawer
+            selector='#createPopupController'
+            isOpen={createPopupOpen}
+            onClose={() => setCreatePopupOpen(false)}
+        >
+            <CreatePopup onClose={() => setCreatePopupOpen(false)}/>
+        </Drawer>
     </div>
   )
 }
