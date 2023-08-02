@@ -30,7 +30,8 @@ const NFTMintPage = () => {
     const [collectionBase64File, setCollectionBase64File] = useState("")
     const [collectionName, setCollectionName] = useState("")
     const [collectionDescription, setCollectionDescription] = useState("")
-    const unlockStep4 = useMemo(() => unlockStep23 && collectionBase64File.length > 0 && collectionName.length > 0,[unlockStep23, collectionBase64File, collectionName])
+    const [collectionTransactionVout, setCollectionTransactionVout] = useState("")
+    const unlockStep4 = useMemo(() => unlockStep23 && (collectionTransactionVout.length > 0 || (collectionBase64File.length > 0 && collectionName.length > 0)),[unlockStep23, collectionBase64File, collectionName])
     const [createPopupOpen, setCreatePopupOpen] = useState(false)
 
     const handleStep1 = (e:any) => {
@@ -155,6 +156,8 @@ const NFTMintPage = () => {
                     setCollectionName={setCollectionName}
                     collectionDescription={collectionDescription}
                     setCollectionDescription={setCollectionDescription}
+                    collectionTransactionVout={collectionTransactionVout}
+                    setCollectionTransactionVout={setCollectionTransactionVout}
                 />
             )}
             {step === 4 && (

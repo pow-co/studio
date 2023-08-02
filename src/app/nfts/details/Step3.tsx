@@ -1,7 +1,34 @@
 'use client'
-import React, { Dispatch, SetStateAction, useCallback, useState } from 'react'
+import React, { Dispatch, SetStateAction, useCallback, useEffect, useState } from 'react'
 import { useDropzone } from 'react-dropzone';
-import { buf2hex } from '@/utils';
+import { buf2hex, convertImageToBase64, getFinalImageUrl } from '@/utils';
+import { useRelay } from '@/context/RelayContext';
+import axios from 'axios';
+
+
+interface collectionItemPreviewProps {
+    collectionName: string;
+    collectionImageSrc: string;
+    collectionTxVout?:string;
+    onSelect: () => void;
+    isSelected: boolean;
+}
+const CollectionItemPreview = ({ collectionName, collectionImageSrc, onSelect, isSelected }: collectionItemPreviewProps) => {
+    const handleSelect = (e:any) => {
+        e.preventDefault()
+        onSelect()
+    }
+    return (
+        <div 
+            onClick={handleSelect} 
+            className={`cursor-pointer col-span-4 flex flex-col w-full items-center justify-center bg-stone-800 rounded-lg p-2 ${isSelected && "border-2 border-green-500"} hover:border-2 hover:border-green-500`}
+        >
+            <img alt={`${collectionName} Collection Image`} className="w-full h-full object-cover rounded-lg" src={collectionImageSrc}/>
+            <h3 className='mt-2 font-semibold text-center'>{collectionName}</h3>
+        </div>
+    )
+} 
+
 
 interface Step3Props {
     base64File: string;
@@ -14,11 +41,18 @@ interface Step3Props {
     setCollectionName: Dispatch<SetStateAction<string>>;
     collectionDescription: string;
     setCollectionDescription: Dispatch<SetStateAction<string>>;
+    collectionTransactionVout: string;
+    setCollectionTransactionVout: Dispatch<SetStateAction<string>>;
 }
-
-const Step3 = ({ base64File, nftName, nftDescription, nftLink, collectionBase64File, setCollectionBase64File, collectionName, setCollectionName, collectionDescription, setCollectionDescription }: Step3Props) => {
+const Step3 = ({ base64File, nftName, nftDescription, nftLink, collectionBase64File, setCollectionBase64File, collectionName, setCollectionName, collectionDescription, setCollectionDescription, collectionTransactionVout, setCollectionTransactionVout }: Step3Props) => {
     const [isCreateCollection, setIsCreateCollection] = useState(true)
-    const creatorAddress = "1myAddress1234567898765432345678765" // TODO how to get the relayAddress from relay Provider
+    const [existingCollection, setExistingCollection] = useState([])
+    const [defaultSelected, setDefaultSelected] = useState(false)
+    const { relayxUserName, relayxAvatar } = useRelay()
+
+    useEffect(() => {
+        //TODO fetch user collections
+    },[])
 
     const onDrop = useCallback((acceptedFiles: any) => {
         acceptedFiles.forEach((file: any) => {
@@ -61,6 +95,37 @@ const Step3 = ({ base64File, nftName, nftDescription, nftLink, collectionBase64F
         setCollectionDescription(e.target.value)
     }
 
+    const handleSelectExistingCollection = (txVout: string) => {
+        setCollectionTransactionVout(txVout)
+    }
+
+    //@ts-ignore
+    const getBase64FromUrl = async (url) => {
+        try {
+            const data = await fetch(url);
+            const blob = await data.blob();
+            return new Promise((resolve) => {
+              const reader = new FileReader();
+              reader.readAsDataURL(blob); 
+              reader.onloadend = () => {
+                const base64data = reader.result;   
+                resolve(base64data);
+              }
+            });
+            
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
+    const handleSelectDefaultCollection = async () => {
+        const b64 = await getBase64FromUrl(relayxAvatar)
+        console.log("heeeer", b64)
+        setCollectionName(`${relayxUserName}'s Collection`)
+        setCollectionDescription(`${relayxAvatar}'s personnal 1Sat Ordinals collection.`)
+        setDefaultSelected(true)
+    }
+
   return (
     <>
     <div className='col-span-1'/>
@@ -90,66 +155,95 @@ const Step3 = ({ base64File, nftName, nftDescription, nftLink, collectionBase64F
         </div>
         <div className='flex'>
             <div onClick={() => setIsCreateCollection(true)} className={`cursor-pointer p-4 ${isCreateCollection ? "border-b-2 font-semibold" : "opacity-80"} border-purple-500`}>Create New Collection</div>
-            <div onClick={() => setIsCreateCollection(false)} className={`cursor-pointer p-4 ${!isCreateCollection ? "border-b-2 font-semibold" : "opacity-80"} border-purple-500`}>Existing Collections</div>
+            <div onClick={() => setIsCreateCollection(false)} className={`cursor-pointer p-4 ${!isCreateCollection ? "border-b-2 font-semibold" : "opacity-80"} border-purple-500`}>Existing Collections <span className='text-sm opacity-50'>({existingCollection.length > 0 ? existingCollection.length : "default"})</span></div>
         </div>
         <div className='mt-10 flex flex-col'>
-            <section className='grid grid-cols-12 gap-4'>
-                {collectionBase64File.length === 0 ? (
-                <div className={`col-span-3 flex relative flex-col items-center justify-center bg-stone-900 rounded-lg p-2`} {...getRootProps({})}>
-                    <label htmlFor="dropzone" className="flex min-h-[7.5rem] w-full cursor-pointer flex-col items-center justify-center rounded-lg hover:bg-stone-800 ">
-                        <div className="flex flex-col items-center justify-center pb-6 pt-5">
-                            <svg aria-hidden="true" className="h-8 w-8 text-stone-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                                <path strokeLinecap="round" stroke-linejoin="round" stroke-width="1" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
-                            </svg>
-                        </div>
-                        <input id="dropzone" {...getInputProps()} />
-                    </label>
-                </div>
-                )
-                : (
-                    <aside className="col-span-3 flex relative flex-col w-full items-center justify-center bg-stone-900 rounded-lg p-2">
-                        <div className="group flex min-h-[7.5rem] w-full cursor-pointer flex-col items-center justify-center rounded-lg hover:bg-stone-800 ">
-                            <div className='grow relative'>
-                                <img
-                                alt="Collection Image"
-                                src={collectionBase64File}
-                                className="w-full min-h-[7.5rem] h-full object-cover rounded-lg relative"
-                                />
+            {isCreateCollection ? (
+                <section className='grid grid-cols-12 gap-4'>
+                    {collectionBase64File.length === 0 ? (
+                    <div className={`col-span-3 flex relative flex-col items-center justify-center bg-stone-900 rounded-lg p-2`} {...getRootProps({})}>
+                        <label htmlFor="dropzone" className="flex min-h-[7.5rem] w-full cursor-pointer flex-col items-center justify-center rounded-lg hover:bg-stone-800 ">
+                            <div className="flex flex-col items-center justify-center pb-6 pt-5">
+                                <svg aria-hidden="true" className="h-8 w-8 text-stone-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                    <path strokeLinecap="round" stroke-linejoin="round" stroke-width="1" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
+                                </svg>
                             </div>
-                            <div onClick={() => setCollectionBase64File("")} className='hidden group-hover:flex cursor-pointer absolute h-full w-full rounded-lg'>
-                                <div className='flex absolute h-full w-full rounded-lg border-2 border-red-500 bg-stone-900 opacity-90'/>
-                                <div className='flex flex-col items-center justify-center w-full rounded-lg z-10'>
-                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1} stroke="currentColor" className="w-8 h-8 stroke-red-500">
-                                        <path strokeLinecap="round" strokeLinejoin="round" d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0" />
-                                    </svg>
-                                    <p className='font-semibold mt-2 text-red-500'>Remove Image</p>
+                            <input id="dropzone" {...getInputProps()} />
+                        </label>
+                    </div>
+                    )
+                    : (
+                        <aside className="col-span-3 flex relative flex-col w-full items-center justify-center bg-stone-900 rounded-lg p-2">
+                            <div className="group flex min-h-[7.5rem] w-full cursor-pointer flex-col items-center justify-center rounded-lg hover:bg-stone-800 ">
+                                <div className='grow relative'>
+                                    <img
+                                    alt="Collection Image"
+                                    src={collectionBase64File}
+                                    className="w-full min-h-[7.5rem] h-full object-cover rounded-lg relative"
+                                    />
+                                </div>
+                                <div onClick={() => setCollectionBase64File("")} className='hidden group-hover:flex cursor-pointer absolute h-full w-full rounded-lg'>
+                                    <div className='flex absolute h-full w-full rounded-lg border-2 border-red-500 bg-stone-900 opacity-90'/>
+                                    <div className='flex flex-col items-center justify-center w-full rounded-lg z-10'>
+                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1} stroke="currentColor" className="w-8 h-8 stroke-red-500">
+                                            <path strokeLinecap="round" strokeLinejoin="round" d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0" />
+                                        </svg>
+                                        <p className='font-semibold mt-2 text-red-500'>Remove Image</p>
+                                    </div>
                                 </div>
                             </div>
+                        </aside>
+                    )}
+                    <div className='col-span-9 flex flex-col items-start justify-between'>
+                        <div>
+                            <div className='font-semibold'>Collection Image<span className='font-normal ml-2 opacity-50'>(required)</span></div>
+                            <p className='text-sm opacity-50'>Supported file types are JPG, PNG, GIF.</p>
                         </div>
-                    </aside>
-                )}
-                <div className='col-span-9 flex flex-col items-start justify-between'>
-                    <div>
-                        <div className='font-semibold'>Collection Image<span className='font-normal ml-2 opacity-50'>(required)</span></div>
-                        <p className='text-sm opacity-50'>Supported file types are JPG, PNG, GIF.</p>
+                        <button onClick={open} disabled={collectionBase64File.length > 0} className='rounded-lg py-2 px-4 bg-white text-black cursor-pointer hover:opacity-80 disabled:cursor-default disabled:opacity-30 disabled:hover:opacity-30'>Select</button>
                     </div>
-                    <button onClick={open} disabled={collectionBase64File.length > 0} className='rounded-lg py-2 px-4 bg-white text-black cursor-pointer hover:opacity-80 disabled:cursor-default disabled:opacity-30 disabled:hover:opacity-30'>Select</button>
-                </div>
-            </section>
-        </div>
-        <div className='mt-10'>
-            <div className='flex justify-between mb-2'>
-                <label htmlFor='collection-name' className='font-semibold'>Name<span className='ml-1 font-normal opacity-80'>(required)</span></label>
-                <div className='text-sm opacity-80'>{collectionName.length}/32</div>
-            </div>
-            <input autoComplete='off' maxLength={32} required type='text' id="collection-name" placeholder='Name' value={collectionName} onChange={handleChangeCollectionName} className='w-full p-4 rounded-lg appearance-none bg-stone-900 placeholder:hover:text-white/80 focus:border-2 focus:outline-none focus:border-green-500' />
-        </div>
-        <div className='mt-10'>
-            <div className='flex justify-between mb-2'>
-                <label htmlFor='nft-description' className='font-semibold'>Description</label>
-                <div className='text-sm opacity-80'>{collectionDescription.length}/500</div>
-            </div>
-            <textarea id="nft-description" placeholder='Name' maxLength={500} rows={4} value={collectionDescription} onChange={handleChangeCollectionDescription} className='w-full p-4 rounded-lg appearance-none bg-stone-900 placeholder:hover:text-white/80 focus:border-2 focus:outline-none focus:border-green-500' />
+                    <div className='col-span-12 flex flex-col items-start justify-between'>
+                        <div className='mt-10 w-full'>
+                            <div className='flex justify-between mb-2'>
+                                <label htmlFor='collection-name' className='font-semibold'>Name<span className='ml-1 font-normal opacity-80'>(required)</span></label>
+                                <div className='text-sm opacity-80'>{collectionName.length}/32</div>
+                            </div>
+                            <input autoComplete='off' maxLength={32} required type='text' id="collection-name" placeholder='Name' value={collectionName} onChange={handleChangeCollectionName} className='w-full p-4 rounded-lg appearance-none bg-stone-900 placeholder:hover:text-white/80 focus:border-2 focus:outline-none focus:border-green-500' />
+                        </div>
+                        <div className='mt-10 w-full'>
+                            <div className='flex justify-between mb-2'>
+                                <label htmlFor='nft-description' className='font-semibold'>Description</label>
+                                <div className='text-sm opacity-80'>{collectionDescription.length}/500</div>
+                            </div>
+                            <textarea id="nft-description" placeholder='Name' maxLength={500} rows={4} value={collectionDescription} onChange={handleChangeCollectionDescription} className='w-full p-4 rounded-lg appearance-none bg-stone-900 placeholder:hover:text-white/80 focus:border-2 focus:outline-none focus:border-green-500' />
+                        </div>
+                    </div>
+                </section>):(
+                <section className='grid grid-cols-12 gap-4'>
+                    {existingCollection.length > 0 ? (
+                        <>
+                            {existingCollection.map((collectionItem: any) => (
+                                <CollectionItemPreview 
+                                    collectionName={collectionItem.collectionName} 
+                                    collectionImageSrc={collectionItem.collectionImageSrc} 
+                                    collectionTxVout={collectionItem.collectionTxVout} 
+                                    onSelect={() => handleSelectExistingCollection(collectionItem.collectionTxVout)}
+                                    isSelected={collectionTransactionVout.length > 0 ? collectionTransactionVout === collectionItem.collectionTxVout : false}
+                                />
+                            ))}
+                        </>
+                    ) : (
+                            <>
+                                <CollectionItemPreview 
+                                    collectionName={`${relayxUserName}'s Collection`} 
+                                    collectionImageSrc={relayxAvatar}
+                                    onSelect={handleSelectDefaultCollection}
+                                    isSelected={defaultSelected}
+                                />
+                                <div className='col-span-8 flex items-center'>If selected we will inscribe this default collection before minting your 1st inscription.</div>
+                            </>
+                    )}
+                </section>    
+            )}
         </div>
     </div>
     <div className='col-span-1'/>
