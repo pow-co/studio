@@ -3,14 +3,62 @@ import dynamic from 'next/dynamic'
 
 import Stag from '@/components/Stag'
 import Link from 'next/link'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 
 const AuthButton = dynamic(() => import("../../components/AuthButton"),{ssr: false})
 
-
-
 export default function Home() {
+
   const [tabSelected, setTabSelected] = useState(0) 
+
+  useEffect(() => {
+
+    import('@powco/sigma-protocol').then(async SigmaProtocol => {
+
+      const { Sigma, bsv } = SigmaProtocol
+
+      const privateKey = bsv.PrivateKey.from_wif(
+        "KzmFJcMXHufPNHixgHNwXBt3mHpErEUG6WFbmuQdy525DezYAi82"
+      );
+      const privateKey2 = bsv.PrivateKey.from_wif(
+        "L1U5FS1PzJwCiFA43hahBUSLytqVoGjSymKSz5WJ92v8YQBBsGZ1"
+      );
+
+      const outputScriptAsm = `OP_0 OP_RETURN ${Buffer.from(
+        "pushdata1",
+        "utf-8"
+      ).toString("hex")} ${Buffer.from("pushdata2", "utf-8").toString("hex")}`;
+
+      const script = bsv.Script.from_asm_string(outputScriptAsm);
+
+      // Build a simple transaction with the output script
+
+      const tx = new bsv.Transaction(1, 0);
+
+      const txOut = new bsv.TxOut(BigInt(0), script);
+
+      tx.add_output(txOut);
+
+      // Create a new Sigma instance with the transaction and targetVout
+      const sigma = new Sigma(tx, 0, 0);
+
+      console.log({ messageHash: sigma.getMessageHash().to_hex() });
+
+      // Sign the message
+      const { sigmaScript, address, signature, signedTx } = sigma.sign(privateKey);
+
+      console.log({ address, signature, signedTx });
+      // console.log({ sigmaScript: sigmaScript.to_asm_string() });
+
+      // Verify the signature
+      const isValid = sigma.verify();
+
+      console.log("Signature is valid:", isValid);
+
+    })
+
+  }, [])
+
   return (
     <div className='grid grid-cols-12 h-screen bg-black text-white'>
       <div className='flex flex-col px-5 justify-center col-span-3 bg-stone-950'>
